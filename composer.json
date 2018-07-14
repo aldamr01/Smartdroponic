@@ -1,0 +1,26 @@
+{
+	"description": "Sistem Informasi Manajemen Anggota UKMKI Versi 2",
+	"name": "Ukmki-Untagsby/Sistem Informasi",
+	"type": "project",
+	"homepage": "https://aldion-amirrul.com",
+	"license": "MIT",
+	"support": {
+		"forum": "http://forum.codeigniter.com/",
+		"wiki": "https://github.com/bcit-ci/CodeIgniter/wiki",
+		"slack": "",
+		"source": "https://github.com/aldamr01/Ukmki-Untagsby-v.2"
+	},
+	"require": {
+		"php": ">=5.3.7",
+		"philo/laravel-blade": "^3.1",
+		"illuminate/database": "5.0.28",
+    "illuminate/events": "5.0.28"
+	},
+	"suggest": {
+		"paragonie/random_compat": "Provides better randomness in PHP 5.x +"
+	},
+	"require-dev": {
+		"mikey179/vfsStream": "1.1.*",
+		"phpunit/phpunit": "4.* || 5.*"
+	}
+}
