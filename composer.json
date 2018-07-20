@@ -14,7 +14,11 @@
 		"php": ">=5.3.7",
 		"philo/laravel-blade": "^3.1",
 		"illuminate/database": "5.0.28",
-    "illuminate/events": "5.0.28"
+    "illuminate/events": "5.0.28",
+		"vlucas/phpdotenv": "2.2.*",
+		"nesbot/carbon": "~1.18",
+		"codeigniter/framework": "3.1.9",
+		"dompdf/dompdf": "^0.8.2"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x +"

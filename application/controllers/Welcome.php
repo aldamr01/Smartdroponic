@@ -18,8 +18,23 @@ class Welcome extends CI_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see https://codeigniter.com/user_guide/general/urls.html
 	 */
+
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->model('M_nama');
+	}
+
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		$cruot	=	array(
+			"PRS_NAME"	=>	"IGA ARIANSYAH",
+			"PRS_GENDER"=>	"Laki-Laki"
+		);
+
+		$data_nama['crot']	=	M_nama::where($cruot)->get();
+
+		echo $this->blade->stream('welcome_message',$data_nama);
+
 	}
 }
