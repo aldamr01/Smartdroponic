@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" charset="utf-8"></script>
 	<meta charset="utf-8">
 	<title>Welcome to CodeIgniter</title>
 
@@ -68,16 +69,57 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <body>
 
 <div id="container">
-	<h1>Welcome to CodeIgniter!</h1>
+	<h1>Node 1 (Aldion's house)</h1>
 
 	<div id="body">
-		@foreach ($crot as $key)
-			{{$key['PRS_NAME']}}<br>
-		@endforeach
+
+		<p>Sensor Installed</p>
+		<code>
+			-nodeMCU <br>
+			-Sensor Cahaya <br>
+			-Breadboard mini <br>
+		</code>
+
+		<p>Scroll kebawah sendiri untuk lihat data terlama </p>
+		<code style="height:200px;width:auto;overflow:scroll;">
+			<pre id="log" style="">
+			</pre>
+		</code>
 	</div>
 
 	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
 </div>
+
+<script type="text/javascript">
+  getData();
+  function getData()
+  {
+    $.ajax({
+
+      url   : 'https://iot.aldion-amirrul.com/index.php/Iot/read/',
+      method: 'GET',
+      success : function(data)
+      {
+        var out = "";
+        for (var i = 0; i < data.data.length; i++) {
+          out += '['
+					+data.data[i].date
+					+']'
+					+'&nbsp;&nbsp;:'
+					+data.data[i].val
+					+'<br/>';
+        }
+        $('#log').html(out);
+				getData();
+      },
+      error   : function(data)
+      {
+        console.log('gagal');
+      }
+
+    });
+  }
+</script>
 
 </body>
 </html>
