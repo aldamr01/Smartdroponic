@@ -21,20 +21,41 @@ class Home extends CI_Controller {
 
 	function __construct()
 	{
-		parent::__construct();
-		$this->load->model('M_nama');
+		parent::__construct();		
 	}
 
 	public function index()
 	{
-		$cruot	=	array(
-			"PRS_NAME"	=>	"IGA ARIANSYAH",
-			"PRS_GENDER"=>	"Laki-Laki"
-		);
-
-		$data_nama['crot']	=	M_nama::where($cruot)->get();
-
 		echo $this->blade->stream('clientzone.dashboard');
+	}
 
+	public function  notifikasi()
+	{
+		echo $this->blade->stream('clientzone.notif');
+	}
+
+	public function pengaturan()
+	{
+		echo $this->blade->stream('clientzone.pilihkebun');
+	}
+
+	public function dashboard()
+	{
+		echo $this->blade->stream('clientzone.homepilihkebun');
+	}
+
+	public function monitoring()
+	{
+		echo $this->blade->stream('clientzone.monitoring');
+	}
+
+	public function login()
+	{
+		echo $this->blade->stream('clientzone.login');
+	}
+
+	public function setting()
+	{
+		echo $this->blade->stream('clientzone.pengaturan');
 	}
 }

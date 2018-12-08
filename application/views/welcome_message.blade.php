@@ -4,121 +4,280 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <html lang="en">
 <head>
 	<script src="https://code.jquery.com/jquery-3.3.1.min.js" charset="utf-8"></script>
+	<script src="//www.amcharts.com/lib/3/amcharts.js"></script>
+	<script src="//www.amcharts.com/lib/3/serial.js"></script>
+	<script src="//www.amcharts.com/lib/3/themes/light.js"></script>
+	<script src="//www.amcharts.com/lib/3/amstock.js"></script>
+
 	<meta charset="utf-8">
 	<title>Welcome to CodeIgniter</title>
 
 	<style type="text/css">
+	html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+}
 
-	::selection { background-color: #E13300; color: white; }
-	::-moz-selection { background-color: #E13300; color: white; }
-
-	body {
-		background-color: #fff;
-		margin: 40px;
-		font: 13px/20px normal Helvetica, Arial, sans-serif;
-		color: #4F5155;
-	}
-
-	a {
-		color: #003399;
-		background-color: transparent;
-		font-weight: normal;
-	}
-
-	h1 {
-		color: #444;
-		background-color: transparent;
-		border-bottom: 1px solid #D0D0D0;
-		font-size: 19px;
-		font-weight: normal;
-		margin: 0 0 14px 0;
-		padding: 14px 15px 10px 15px;
-	}
-
-	code {
-		font-family: Consolas, Monaco, Courier New, Courier, monospace;
-		font-size: 12px;
-		background-color: #f9f9f9;
-		border: 1px solid #D0D0D0;
-		color: #002166;
-		display: block;
-		margin: 14px 0 14px 0;
-		padding: 12px 10px 12px 10px;
-	}
-
-	#body {
-		margin: 0 15px 0 15px;
-	}
-
-	p.footer {
-		text-align: right;
-		font-size: 11px;
-		border-top: 1px solid #D0D0D0;
-		line-height: 32px;
-		padding: 0 10px 0 10px;
-		margin: 20px 0 0 0;
-	}
-
-	#container {
-		margin: 10px;
-		border: 1px solid #D0D0D0;
-		box-shadow: 0 0 8px #D0D0D0;
-	}
+#chartdiv {
+	width: 100%;
+	height: 100%;
+}
 	</style>
 </head>
 <body>
 
-<div id="container">
-	<h1>Node 1 (Aldion's house)</h1>
+<div id="chartdiv" ></div>
 
-	<div id="body">
-
-		<p>Sensor Installed</p>
-		<code>
-			-nodeMCU <br>
-			-Sensor Cahaya <br>
-			-Breadboard mini <br>
-		</code>
-
-		<p>Scroll kebawah sendiri untuk lihat data terlama </p>
-		<code style="height:200px;width:auto;overflow:scroll;">
-			<pre id="log" style="">
-			</pre>
-		</code>
-	</div>
-
-	<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
-</div>
 
 <script type="text/javascript">
-  getData();
-  function getData()
-  {
-    $.ajax({
+/**
+* Generate random chart data
+*/
+var chartData1 = [];
+var chartData2 = [];
+var chartData3 = [];
+var chartData4 = [];
 
-      url   : 'https://iot.aldion-amirrul.com/index.php/Iot/read/',
-      method: 'GET',
-      success : function(data)
-      {
-        var out = "";
-        for (var i = 0; i < data.data.length; i++) {
-          out += '['
-					+data.data[i].date
-					+']'
-					+'&nbsp;&nbsp;:'
-					+data.data[i].val
-					+'<br/>';
-        }
-        $('#log').html(out);
-				getData();
-      },
-      error   : function(data)
-      {
-        console.log('gagal');
-      }
+function generateChartData() {
+var firstDate = new Date();
+firstDate.setDate( firstDate.getDate() - 500 );
+firstDate.setHours( 0, 0, 0, 0 );
 
-    });
-  }
+for ( var i = 0; i < 500; i++ ) {
+	var newDate = new Date( firstDate );
+	newDate.setDate( newDate.getDate() + i );
+
+	var a1 = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
+	var b1 = Math.round( Math.random() * ( 1000 + i ) ) + 500 + i * 2;
+
+	var a2 = Math.round( Math.random() * ( 100 + i ) ) + 200 + i;
+	var b2 = Math.round( Math.random() * ( 1000 + i ) ) + 600 + i * 2;
+
+	var a3 = Math.round( Math.random() * ( 100 + i ) ) + 200;
+	var b3 = Math.round( Math.random() * ( 1000 + i ) ) + 600 + i * 2;
+
+	var a4 = Math.round( Math.random() * ( 100 + i ) ) + 200 + i;
+	var b4 = Math.round( Math.random() * ( 100 + i ) ) + 600 + i;
+
+	chartData1.push( {
+		"date": newDate,
+		"value": a1,
+		"volume": b1
+	} );
+	chartData2.push( {
+		"date": newDate,
+		"value": a2,
+		"volume": b2
+	} );
+	chartData3.push( {
+		"date": newDate,
+		"value": a3,
+		"volume": b3
+	} );
+	chartData4.push( {
+		"date": newDate,
+		"value": a4,
+		"volume": b4
+	} );
+}
+}
+
+generateChartData();
+
+/**
+* Create the chart
+*/
+var chart = AmCharts.makeChart( "chartdiv", {
+"type": "stock",
+"theme": "light",
+
+// This will keep the selection at the end across data updates
+"glueToTheEnd": true,
+
+// Defining data sets
+"dataSets": [ {
+	"title": "first data set",
+	"fieldMappings": [ {
+		"fromField": "value",
+		"toField": "value"
+	}, {
+		"fromField": "volume",
+		"toField": "volume"
+	} ],
+	"dataProvider": chartData1,
+	"categoryField": "date"
+}, {
+	"title": "second data set",
+	"fieldMappings": [ {
+		"fromField": "value",
+		"toField": "value"
+	}, {
+		"fromField": "volume",
+		"toField": "volume"
+	} ],
+	"dataProvider": chartData2,
+	"categoryField": "date"
+}, {
+	"title": "third data set",
+	"fieldMappings": [ {
+		"fromField": "value",
+		"toField": "value"
+	}, {
+		"fromField": "volume",
+		"toField": "volume"
+	} ],
+	"dataProvider": chartData3,
+	"categoryField": "date"
+}, {
+	"title": "fourth data set",
+	"fieldMappings": [ {
+		"fromField": "value",
+		"toField": "value"
+	}, {
+		"fromField": "volume",
+		"toField": "volume"
+	} ],
+	"dataProvider": chartData4,
+	"categoryField": "date"
+} ],
+
+// Panels
+"panels": [ {
+	"showCategoryAxis": false,
+	"title": "Value",
+	"percentHeight": 60,
+	"stockGraphs": [ {
+		"id": "g1",
+		"valueField": "value",
+		"comparable": true,
+		"compareField": "value"
+	} ],
+	"stockLegend": {}
+}, {
+	"title": "Volume",
+	"percentHeight": 40,
+	"stockGraphs": [ {
+		"valueField": "volume",
+		"type": "column",
+		"showBalloon": false,
+		"fillAlphas": 1
+	} ],
+	"stockLegend": {}
+} ],
+
+// Scrollbar settings
+"chartScrollbarSettings": {
+	"graph": "g1",
+	"usePeriod": "WW"
+},
+
+// Period Selector
+"periodSelector": {
+	"position": "left",
+	"periods": [ {
+		"period": "DD",
+		"count": 10,
+		"label": "10 days"
+	}, {
+		"period": "MM",
+		"selected": true,
+		"count": 1,
+		"label": "1 month"
+	}, {
+		"period": "YYYY",
+		"count": 1,
+		"label": "1 year"
+	}, {
+		"period": "YTD",
+		"label": "YTD"
+	}, {
+		"period": "MAX",
+		"label": "MAX"
+	} ]
+},
+
+// Data Set Selector
+"dataSetSelector": {
+	"position": "left"
+},
+
+// Event listeners
+"listeners": [ {
+	"event": "rendered",
+	"method": function( event ) {
+		chart.mouseDown = false;
+		chart.containerDiv.onmousedown = function() {
+			chart.mouseDown = true;
+		}
+		chart.containerDiv.onmouseup = function() {
+			chart.mouseDown = false;
+		}
+	}
+} ]
+} );
+
+/**
+* Set up interval to update the data periodically
+*/
+setInterval( function() {
+
+// if mouse is down, stop all updates
+if ( chart.mouseDown )
+	return;
+
+// normally you would load new datapoints here,
+// but we will just generate some random values
+// and remove the value from the beginning so that
+// we get nice sliding graph feeling
+
+// remove datapoint from the beginning
+// chartData1.shift();
+//chartData2.shift();
+//chartData3.shift();
+// chartData4.shift();
+
+// add new datapoint at the end
+var newDate = new Date( chartData1[ chartData1.length - 1 ].date );
+newDate.setDate( newDate.getDate() + 1 );
+
+var i = chartData1.length;
+
+var a1 = Math.round( Math.random() * ( 40 + i ) ) + 100 + i;
+var b1 = Math.round( Math.random() * ( 1000 + i ) ) + 500 + i * 2;
+
+var a2 = Math.round( Math.random() * ( 100 + i ) ) + 200 + i;
+var b2 = Math.round( Math.random() * ( 1000 + i ) ) + 600 + i * 2;
+
+var a3 = Math.round( Math.random() * ( 100 + i ) ) + 200;
+var b3 = Math.round( Math.random() * ( 1000 + i ) ) + 600 + i * 2;
+
+var a4 = Math.round( Math.random() * ( 100 + i ) ) + 200 + i;
+var b4 = Math.round( Math.random() * ( 100 + i ) ) + 600 + i;
+
+chart.dataSets[ 0 ].dataProvider.push( {
+	date: newDate,
+	value: a1,
+	volume: b1
+} );
+chart.dataSets[ 1 ].dataProvider.push( {
+	date: newDate,
+	value: a2,
+	volume: b2
+} );
+chart.dataSets[ 2 ].dataProvider.push( {
+	date: newDate,
+	value: a3,
+	volume: b3
+} );
+chart.dataSets[ 3 ].dataProvider.push( {
+	date: newDate,
+	value: a4,
+	volume: b4
+} );
+
+chart.validateData();
+}, 1000 );
 </script>
 
 </body>
